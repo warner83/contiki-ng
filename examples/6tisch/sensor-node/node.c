@@ -59,8 +59,6 @@
 
 #define UDP_CLIENT_PORT	8765
 #define UDP_SERVER_PORT	5678
-#define MAX_SOURCE_NODES 3
-#define NSEQNOS 4
 
 enum role {ROOT, FORWARDER, SOURCE};
 
