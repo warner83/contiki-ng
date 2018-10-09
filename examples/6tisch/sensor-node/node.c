@@ -202,7 +202,7 @@ PROCESS_THREAD(node_process, ev, data)
 
   /* root */
   if(my_role == ROOT) {
-    LOG_INFO("I am a root");
+    LOG_PRINT("I am a root\n");
     /* start routing root; start UDP server */
     NETSTACK_ROUTING.root_start();
     simple_udp_register(&udp_conn, UDP_SERVER_PORT, NULL,
@@ -223,12 +223,13 @@ PROCESS_THREAD(node_process, ev, data)
     while (!NETSTACK_ROUTING.node_is_reachable()) {
       etimer_set(&et, CLOCK_SECOND);
       PROCESS_YIELD_UNTIL(etimer_expired(&et));
-      LOG_INFO(".");
+      LOG_INFO_(".");
       fflush(stdout);
     }
+    LOG_INFO_("\n");
     NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr);
     LOG_INFO_6ADDR(&root_ipaddr);
-    LOG_INFO("\n");
+    LOG_INFO_("\n");
     t1 = clock_seconds();
     LOG_INFO("It took %lu s\n", t1 - t0);
 
@@ -238,14 +239,14 @@ PROCESS_THREAD(node_process, ev, data)
 
     /* source node */
     if(my_role == SOURCE) {
-      LOG_INFO("I am a source");
+      LOG_PRINT("I am a source\n");
       /* Initialize UDP connection */
       simple_udp_register(&udp_conn, UDP_CLIENT_PORT, NULL,
                           UDP_SERVER_PORT, udp_rx_callback);
       /*Start periodic sending */
       process_start(&udp_client_process, NULL);
     } else {
-      LOG_INFO("I am a forwarder");
+      LOG_PRINT("I am a forwarder\n");
     }
   }
 
@@ -375,7 +376,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
     while(pkts_sent < (MAX_PKTS * (run+1))) {
       char message[DEFAULT_PAYLOAD_LEN];
       (void)create_message(pkts_sent + 1, message, sizeof(message));
-      LOG_INFO("^");
+      LOG_INFO_("^");
       fflush(stdout);
       simple_udp_sendto(&udp_conn, message, sizeof(message), &root_ipaddr);
       pkts_sent++;
