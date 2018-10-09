@@ -69,7 +69,7 @@ static uip_ipaddr_t root_ipaddr;
 static enum role my_role = ROOT;
 static int run;
 
-struct rcv_stats {
+struct stats {
   uip_ipaddr_t src_addr;
   bool started;
   bool finished;
@@ -82,7 +82,7 @@ struct rcv_stats {
   int total_pkts_received[MAX_RUNS];
 };
 
-MEMB(rcv_stats_mem, struct rcv_stats, MAX_SOURCE_NODES);
+MEMB(stats_tbl, struct stats, MAX_SOURCE_NODES);
 
 /*---------------------------------------------------------------------------*/
 PROCESS(node_process, "RPL Node");
@@ -99,26 +99,27 @@ udp_rx_callback(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  struct rcv_stats *stats = NULL;
+  struct stats *stats = NULL;
 
   // does source node exist already?
   int i;
   for(i = 0;i < MAX_SOURCE_NODES;i++) {
-    if(uip_ipaddr_cmp(&rcv_stats_mem_memb_mem[i].src_addr, sender_addr)) {
-      stats = &rcv_stats_mem_memb_mem[i];
+    if(stats_tbl.count[i] > 0 &&
+       uip_ipaddr_cmp(&stats_tbl_memb_mem[i].src_addr, sender_addr)) {
+      stats = &stats_tbl_memb_mem[i];
       break;
     }
   }
 
   // add new source node
   if(stats == NULL) {
-    stats = memb_alloc(&rcv_stats_mem);
+    stats = memb_alloc(&stats_tbl);
     if(stats != NULL) {
       uip_ipaddr_copy(&stats->src_addr, sender_addr);
       LOG_INFO("new source node ");
       LOG_INFO_6ADDR(&stats->src_addr);
       LOG_INFO_("\n");
-      LOG_INFO("memb slots available = %d\n", memb_numfree(&rcv_stats_mem));
+      LOG_INFO("memb slots available = %d\n", memb_numfree(&stats_tbl));
     } else {
       LOG_INFO("memb_alloc returns NULL\n");
     }
@@ -129,9 +130,9 @@ udp_rx_callback(struct simple_udp_connection *c,
   }
 
   // create a visual offset based on addr index in source addr memory block
-  i = i % MAX_SOURCE_NODES;
   char spaces[5 * MAX_SOURCE_NODES];
   memset(spaces, ' ', sizeof(spaces));
+  i = stats - &stats_tbl_memb_mem[0];
   spaces[i*5] = '\0';
 
   LOG_INFO("%s <-- %s :%02x%02x\n",
@@ -207,7 +208,7 @@ PROCESS_THREAD(node_process, ev, data)
     simple_udp_register(&udp_conn, UDP_SERVER_PORT, NULL,
                         UDP_CLIENT_PORT, udp_rx_callback);
     /* packet stats per source node */
-    memb_init(&rcv_stats_mem);
+    memb_init(&stats_tbl);
     /* end-of-run handling */
     process_start(&root_process, NULL);
   }
@@ -271,7 +272,7 @@ PROCESS_THREAD(node_process, ev, data)
 }
 /*---------------------------------------------------------------------------*/
 static void
-print_run_stats(struct rcv_stats *stats)
+print_run_stats(struct stats *stats)
 {
   LOG_INFO("***** Node %02X%02X Run %d received %d *****\n",
          stats->src_addr.u8[14], stats->src_addr.u8[15],
@@ -280,7 +281,7 @@ print_run_stats(struct rcv_stats *stats)
 
 /* print test runs result in table form */
 static void
-print_all_stats(struct rcv_stats *stats)
+print_all_stats(struct stats *stats)
 {
   int i;
 
@@ -321,15 +322,19 @@ create_message(int seqno, char *buffer, size_t buflen)
 static void
 root_et_handler(struct etimer *et)
 {
-  if(!memb_inmemb(&rcv_stats_mem, et)) {
+  struct stats *stats = NULL;
+  int i;
+  for(i = 0;i < MAX_SOURCE_NODES;i++) {
+    if(et == &stats_tbl_memb_mem[i].et) {
+      stats = &stats_tbl_memb_mem[i];
+      break;
+    }
+  }
+  if(stats == NULL) {
+    LOG_ERR("stats pointer out of range\n");
     return;
   }
 
-  int i;
-  i = (et - &rcv_stats_mem_memb_mem[0].et) / sizeof(struct rcv_stats);
-
-  struct rcv_stats *stats;
-  stats = &rcv_stats_mem_memb_mem[i];
   stats->finished = 1;
 
   /* print run stats, clean up for next run; */
@@ -347,8 +352,8 @@ root_et_handler(struct etimer *et)
     /* if this was the last run, print final stats */
     if(stats->run == MAX_RUNS) {
       print_all_stats(stats);
-      memset(stats, 0, sizeof(struct rcv_stats));
-      memb_free(&rcv_stats_mem, stats);
+      memset(stats, 0, sizeof(struct stats));
+      memb_free(&stats_tbl, stats);
     }
   }
 }
