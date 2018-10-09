@@ -59,11 +59,14 @@
 #define TSCH_SCHEDULE_CONF_DEFAULT_LENGTH 3
 
 #if WITH_SECURITY
-
 /* Enable security */
 #define LLSEC802154_CONF_ENABLED 1
-
 #endif /* WITH_SECURITY */
+
+/* Orchestra customizations */
+#define ORCHESTRA_CONF_RULES { &eb_per_time_source, &unicast_per_neighbor_rpl_storing, &default_common }
+#define ORCHESTRA_CONF_UNICAST_SENDER_BASED 1
+#define ORCHESTRA_CONF_COLLISION_FREE_HASH 1
 
 /*******************************************************/
 /************* Other system configuration **************/

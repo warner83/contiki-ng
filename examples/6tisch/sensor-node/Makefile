@@ -7,7 +7,7 @@ BOARDS_EXCLUDE = srf06/cc13xx launchpad/cc1310 launchpad/cc1350 sensortag/cc2650
 CONTIKI=../../..
 
  # force Orchestra from command line
-MAKE_WITH_ORCHESTRA ?= 0
+MAKE_WITH_ORCHESTRA ?= 1
 # force Security from command line
 MAKE_WITH_SECURITY ?= 0
  # print #routes periodically, used for regression tests
@@ -15,6 +15,8 @@ MAKE_WITH_PERIODIC_ROUTES_PRINT ?= 0
 
 MAKE_MAC = MAKE_MAC_TSCH
 MODULES += os/services/shell
+
+MAKE_ROUTING = MAKE_ROUTING_RPL_CLASSIC
 
 ifeq ($(MAKE_WITH_ORCHESTRA),1)
 MODULES += os/services/orchestra
