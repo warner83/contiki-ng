@@ -362,8 +362,8 @@ root_et_handler(struct etimer *et)
     /* if this was the last run, print final stats */
     if(stats->run == MAX_RUNS) {
       print_all_stats(stats);
-      memset(stats, 0, sizeof(struct stats));
-      memb_free(&stats_tbl, stats);
+      stats->run = 0;
+      /* memb_free(&stats_tbl, stats); */
     }
   }
 }
