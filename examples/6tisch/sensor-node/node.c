@@ -362,8 +362,6 @@ root_et_handler(struct etimer *et)
 PROCESS_THREAD(udp_client_process, ev, data)
 {
   static struct etimer periodic_timer;
-  /* static unsigned count; */
-  /* uip_ipaddr_t dest_ipaddr; */
 
   PROCESS_BEGIN();
 
