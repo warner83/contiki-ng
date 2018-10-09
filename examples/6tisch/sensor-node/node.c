@@ -55,7 +55,7 @@
 #include "node.h"
 
 #define LOG_MODULE "App"
-#define LOG_LEVEL LOG_LEVEL_DBG
+#define LOG_LEVEL LOG_LEVEL_INFO
 
 #define UDP_CLIENT_PORT	8765
 #define UDP_SERVER_PORT	5678
@@ -115,9 +115,9 @@ udp_rx_callback(struct simple_udp_connection *c,
     stats = memb_alloc(&rcv_stats_mem);
     if(stats != NULL) {
       uip_ipaddr_copy(&stats->src_addr, sender_addr);
-      LOG_INFO("new source node\n");
+      LOG_INFO("new source node ");
       LOG_INFO_6ADDR(&stats->src_addr);
-      LOG_INFO("\n");
+      LOG_INFO_("\n");
       LOG_INFO("memb slots available = %d\n", memb_numfree(&rcv_stats_mem));
     } else {
       LOG_INFO("memb_alloc returns NULL\n");
@@ -284,12 +284,12 @@ print_all_stats(struct rcv_stats *stats)
 {
   int i;
 
-  LOG_INFO("node stats\n");
-  LOG_INFO_6ADDR(&stats->src_addr);
-  LOG_INFO("\n");
-  LOG_INFO("run rcv duration\n");
+  LOG_PRINT("node stats ");
+  LOG_PRINT_6ADDR(&stats->src_addr);
+  LOG_PRINT_("\n");
+  LOG_PRINT("run rcv duration\n");
   for(i = 0;i < MAX_RUNS;i++) {
-    LOG_INFO("%3d %3d %4lu (%lu.%1lus)\n",
+    LOG_PRINT("%3d %3d %4lu (%lu.%1lus)\n",
            i,
            stats->total_pkts_received[i],
            stats->run_duration[i],
