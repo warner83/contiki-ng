@@ -69,6 +69,9 @@ static uip_ipaddr_t root_ipaddr;
 static enum role my_role = ROOT;
 static int run;
 
+static void
+root_et_handler(struct etimer *et);
+
 struct stats {
   uip_ipaddr_t src_addr;
   bool started;
@@ -172,15 +175,21 @@ udp_rx_callback(struct simple_udp_connection *c,
     stats->run_started_at = clock_time();
   }
 
-  /* estimate time to the end of run, with extra margin */
-  clock_time_t expiration_time;
-  PROCESS_CONTEXT_BEGIN(&root_process);
-  expiration_time = etimer_expiration_time(&stats->et) - clock_time();
-  LOG_DBG("was expiring in %lu\n", expiration_time);
-  expiration_time = (MAX_PKTS * (stats->run + 1) - seqno + 1 + 7) * SEND_INTERVAL_MAX;
-  LOG_DBG("now expiring in %lu\n", expiration_time);
-  etimer_set(&stats->et, expiration_time);
-  PROCESS_CONTEXT_END(&root_process);
+  /* end of run? */
+  if(seqno >= MAX_PKTS * (stats->run + 1)) {
+    etimer_stop(&(stats->et));
+    root_et_handler(&(stats->et));
+  } else {
+    /* estimate time to the end of run, with extra margin */
+    clock_time_t expiration_time;
+    PROCESS_CONTEXT_BEGIN(&root_process);
+    expiration_time = etimer_expiration_time(&stats->et) - clock_time();
+    LOG_DBG("was expiring in %lu\n", expiration_time);
+    expiration_time = (MAX_PKTS * (stats->run + 1) - seqno + 1 + 5) * SEND_INTERVAL_MAX;
+    LOG_DBG("now expiring in %lu\n", expiration_time);
+    etimer_set(&stats->et, expiration_time);
+    PROCESS_CONTEXT_END(&root_process);
+  }
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -383,7 +392,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
       etimer_set(&periodic_timer, SEND_INTERVAL);
       PROCESS_YIELD_UNTIL(etimer_expired(&periodic_timer));
     }
-    etimer_set(&periodic_timer, CLOCK_SECOND * 8);
+    etimer_set(&periodic_timer, SEND_INTERVAL * 8);
     LOG_INFO("\n-------- RUN %d ended -------- \n", run);
     PROCESS_YIELD_UNTIL(etimer_expired(&periodic_timer));
   }
