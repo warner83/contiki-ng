@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, SICS Swedish ICT.
+ * Copyright (c) 2018, ASSA ABLOY AB.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,12 +28,10 @@
  *
  */
 /**
- * \file
- *         A RPL+TSCH node able to act as either a simple node (6ln),
- *         DAG Root (6dr) or DAG Root with security (6dr-sec)
- *         Press use button at startup to configure.
+ * \file   UDP Tx-Rx forwarding test using the simple UDP API
+ *         In the end, root node prints statistics per source node per test run
  *
- * \author Simon Duquennoy <simonduq@sics.se>
+ * \author Zhitao He <zhitao.he@assaabloy.com>
  */
 
 #include "contiki.h"
@@ -55,12 +53,6 @@
 #include <stdlib.h>
 #include "memb.h"
 #include "node.h"
-
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
 
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -107,11 +99,6 @@ udp_rx_callback(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  /* unsigned count = *(unsigned *)data; */
-  /* LOG_INFO("Received response %u from ", count); */
-  /* LOG_INFO_6ADDR(sender_addr); */
-  /* LOG_INFO_("\n"); */
-
   struct rcv_stats *stats = NULL;
 
   // does source node exist already?
@@ -152,8 +139,6 @@ udp_rx_callback(struct simple_udp_connection *c,
          spaces,
          sender_addr->u8[14],
          sender_addr->u8[15]);
-
-  /* led_toggle(LED2); */
 
   /* received a redundant packet? skip */
   int seqno = atoi((const char*) data);
@@ -376,25 +361,6 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
   PROCESS_BEGIN();
 
-  /* etimer_set(&periodic_timer, SEND_INTERVAL); */
-  /* while(1) { */
-  /*   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer)); */
-
-  /*   if(NETSTACK_ROUTING.node_is_reachable() && NETSTACK_ROUTING.get_root_ipaddr(&dest_ipaddr)) { */
-  /*     /\* Send to DAG root *\/ */
-  /*     LOG_INFO("Sending request %u to ", count); */
-  /*     LOG_INFO_6ADDR(&dest_ipaddr); */
-  /*     LOG_INFO_("\n"); */
-  /*     simple_udp_sendto(&udp_conn, &count, sizeof(count), &dest_ipaddr); */
-  /*     count++; */
-  /*   } else { */
-  /*     LOG_INFO("Not reachable yet\n"); */
-  /*   } */
-
-  /*   /\* TODO: Add some jitter *\/ */
-  /*   etimer_reset(&periodic_timer); */
-  /* } */
-
   /* leaf: send R batches of N packets to root */
   static int pkts_sent = 0;
   for(run = 0;run < MAX_RUNS;run++) {
@@ -408,7 +374,6 @@ PROCESS_THREAD(udp_client_process, ev, data)
       fflush(stdout);
       simple_udp_sendto(&udp_conn, message, sizeof(message), &root_ipaddr);
       pkts_sent++;
-      /* led_toggle(LED2); */
 
       /* send packet and yield */
       etimer_set(&periodic_timer, SEND_INTERVAL);
