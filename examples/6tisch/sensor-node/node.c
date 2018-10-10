@@ -183,7 +183,7 @@ udp_rx_callback(struct simple_udp_connection *c,
     PROCESS_CONTEXT_BEGIN(&root_process);
     expiration_time = etimer_expiration_time(&stats->et) - clock_time();
     LOG_DBG("was expiring in %lu\n", expiration_time);
-    expiration_time = (MAX_PKTS * (stats->run + 1) - seqno + 1 + 5) * SEND_INTERVAL_MAX;
+    expiration_time = (MAX_PKTS * (stats->run + 1) - seqno + 30) * SEND_INTERVAL;
     LOG_DBG("now expiring in %lu\n", expiration_time);
     etimer_set(&stats->et, expiration_time);
     PROCESS_CONTEXT_END(&root_process);
@@ -390,7 +390,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
       etimer_set(&periodic_timer, SEND_INTERVAL);
       PROCESS_YIELD_UNTIL(etimer_expired(&periodic_timer));
     }
-    etimer_set(&periodic_timer, SEND_INTERVAL * 8);
+    etimer_set(&periodic_timer, SEND_INTERVAL * 15);
     LOG_INFO("\n-------- RUN %d ended -------- \n", run);
     PROCESS_YIELD_UNTIL(etimer_expired(&periodic_timer));
   }
