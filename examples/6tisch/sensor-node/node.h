@@ -6,7 +6,7 @@
 #define MAX_PKTS 10
 #define DEFAULT_PAYLOAD_LEN 50
 #define MAX_RUNS 2
-#define MAX_SOURCE_NODES 4
+#define MAX_SOURCE_NODES 16
 #define NSEQNOS 4
 
 /* random interval uniformly distributed btw. min and max values,
