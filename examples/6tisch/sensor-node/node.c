@@ -196,6 +196,12 @@ set_role(void)
 #if CONTIKI_TARGET_COOJA
   my_role = node_id == 1 ? ROOT : SOURCE;
 #endif
+#if LEAF_ONLY
+  if(my_role == SOURCE) {
+    rpl_set_leaf_only(1);
+    LOG_INFO("set node as RPL leaf\n");
+  }
+#endif
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(node_process, ev, data)
@@ -247,6 +253,12 @@ PROCESS_THREAD(node_process, ev, data)
     /* source node */
     if(my_role == SOURCE) {
       LOG_PRINT("I am a source\n");
+      /* EXPERIMENTAL: sync start time until TSCH is up for 2 min */
+      while(tsch_current_asn.ms1b == 0 &&
+            tsch_current_asn.ls4b < 120 * TSCH_SLOTS_PER_SECOND) {
+        etimer_set(&et, CLOCK_SECOND);
+        PROCESS_YIELD_UNTIL(etimer_expired(&et));
+      }
       /* Initialize UDP connection */
       simple_udp_register(&udp_conn, UDP_CLIENT_PORT, NULL,
                           UDP_SERVER_PORT, udp_rx_callback);
