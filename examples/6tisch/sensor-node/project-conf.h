@@ -69,23 +69,23 @@
 #define ORCHESTRA_CONF_COLLISION_FREE_HASH 1
 #define ORCHESTRA_CONF_EBSF_PERIOD 397
 #define ORCHESTRA_CONF_COMMON_SHARED_PERIOD 31
-#define ORCHESTRA_CONF_UNICAST_PERIOD 5
+#define ORCHESTRA_CONF_UNICAST_PERIOD 4
 
 /* TSCH customizations */
-#define TSCH_CONF_DEFAULT_TIMESLOT_LENGTH 8000 // 8 ms
-
+/* #define TSCH_CONF_DEFAULT_TIMESLOT_LENGTH 8000 // 8 ms */
+#define TSCH_CONF_BURST_MAX_LEN 0 // set to 0 to disable burst mode
 
 /*******************************************************/
 /************* Other system configuration **************/
 /*******************************************************/
 
 /* Logging */
-#define LOG_CONF_LEVEL_RPL                         LOG_LEVEL_INFO
+#define LOG_CONF_LEVEL_RPL                         LOG_LEVEL_WARN
 #define LOG_CONF_LEVEL_TCPIP                       LOG_LEVEL_WARN
 #define LOG_CONF_LEVEL_IPV6                        LOG_LEVEL_WARN
 #define LOG_CONF_LEVEL_6LOWPAN                     LOG_LEVEL_WARN
-#define LOG_CONF_LEVEL_MAC                         LOG_LEVEL_INFO
+#define LOG_CONF_LEVEL_MAC                         LOG_LEVEL_WARN
 #define LOG_CONF_LEVEL_FRAMER                      LOG_LEVEL_WARN
-#define TSCH_LOG_CONF_PER_SLOT                     1
+#define TSCH_LOG_CONF_PER_SLOT                     0
 
 #endif /* PROJECT_CONF_H_ */
