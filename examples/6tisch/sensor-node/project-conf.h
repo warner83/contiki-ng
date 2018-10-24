@@ -69,11 +69,15 @@
 #define ORCHESTRA_CONF_COLLISION_FREE_HASH 1
 #define ORCHESTRA_CONF_EBSF_PERIOD 397
 #define ORCHESTRA_CONF_COMMON_SHARED_PERIOD 31
-#define ORCHESTRA_CONF_UNICAST_PERIOD 4
+#define ORCHESTRA_CONF_UNICAST_PERIOD 16
 
 /* TSCH customizations */
-/* #define TSCH_CONF_DEFAULT_TIMESLOT_LENGTH 8000 // 8 ms */
+/* #define TSCH_CONF_DEFAULT_TIMESLOT_LENGTH 8000 // 8 ms *\/ */
 #define TSCH_CONF_BURST_MAX_LEN 0 // set to 0 to disable burst mode
+#define QUEUEBUF_CONF_NUM 8 // general size of various queue buffers, cooja default 64
+/* #define TSCH_CONF_DEQUEUED_ARRAY_SIZE 8 // must >= QUEUEBUF_CONF_NUM */
+/* #define TSCH_CONF_MAX_INCOMING_PACKETS 4 // tsch default 4 */
+#define TSCH_QUEUE_CONF_NUM_PER_NEIGHBOR 8 // default QUEUEBUF_CONF_NUM
 
 /*******************************************************/
 /************* Other system configuration **************/
