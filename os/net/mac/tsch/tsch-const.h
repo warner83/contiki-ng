@@ -154,18 +154,18 @@
 #elif TSCH_CONF_DEFAULT_TIMESLOT_LENGTH == 8000
 /* EXPERIMENTAL 8ms timeslot, scale all letency by 0.8x from 10 ms config */
 
-#define TSCH_DEFAULT_TS_CCA_OFFSET         1800 * 4 / 5
-#define TSCH_DEFAULT_TS_CCA                128 * 4 / 5
-#define TSCH_DEFAULT_TS_TX_OFFSET          2120 * 4 / 5
-#define TSCH_DEFAULT_TS_RX_OFFSET          (TSCH_DEFAULT_TS_TX_OFFSET - (TSCH_CONF_RX_WAIT / 2)) * 4 / 5
-#define TSCH_DEFAULT_TS_RX_ACK_DELAY       800 * 4 / 5
-#define TSCH_DEFAULT_TS_TX_ACK_DELAY       1000 * 4 / 5
-#define TSCH_DEFAULT_TS_RX_WAIT            TSCH_CONF_RX_WAIT * 4 / 5
-#define TSCH_DEFAULT_TS_ACK_WAIT           400 * 4 / 5
-#define TSCH_DEFAULT_TS_RX_TX              192 * 4 / 5
-#define TSCH_DEFAULT_TS_MAX_ACK            2400 * 4 / 5
-#define TSCH_DEFAULT_TS_MAX_TX             4256 * 4 / 5
-#define TSCH_DEFAULT_TS_TIMESLOT_LENGTH    10000 * 4 / 5
+#define TSCH_DEFAULT_TS_CCA_OFFSET         (1800 * 4 / 5)
+#define TSCH_DEFAULT_TS_CCA                (128 * 4 / 5)
+#define TSCH_DEFAULT_TS_TX_OFFSET          (2120 * 4 / 5)
+#define TSCH_DEFAULT_TS_RX_OFFSET          ((TSCH_DEFAULT_TS_TX_OFFSET - (TSCH_CONF_RX_WAIT / 2)) * 4 / 5)
+#define TSCH_DEFAULT_TS_RX_ACK_DELAY       (800 * 4 / 5)
+#define TSCH_DEFAULT_TS_TX_ACK_DELAY       (1000 * 4 / 5)
+#define TSCH_DEFAULT_TS_RX_WAIT            (TSCH_CONF_RX_WAIT * 4 / 5)
+#define TSCH_DEFAULT_TS_ACK_WAIT           (400 * 4 / 5)
+#define TSCH_DEFAULT_TS_RX_TX              (192 * 4 / 5)
+#define TSCH_DEFAULT_TS_MAX_ACK            (2400 * 4 / 5)
+#define TSCH_DEFAULT_TS_MAX_TX             (4256 * 4 / 5)
+#define TSCH_DEFAULT_TS_TIMESLOT_LENGTH    (10000 * 4 / 5)
 
 #else
 #error "TSCH: Unsupported default timeslot length"
