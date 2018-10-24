@@ -131,15 +131,14 @@ udp_rx_callback(struct simple_udp_connection *c,
   }
 
   // create a visual offset based on addr index in source addr memory block
-  char spaces[5 * MAX_SOURCE_NODES];
+  char spaces[3 * MAX_SOURCE_NODES];
   memset(spaces, ' ', sizeof(spaces));
   i = stats - &stats_tbl_memb_mem[0];
   spaces[i*5] = '\0';
 
-  LOG_INFO("%s <-- %s :%02x%02x\n",
+  LOG_INFO("%s <-- %s %3d\n",
          (char*)data,
          spaces,
-         sender_addr->u8[14],
          sender_addr->u8[15]);
 
   /* received a redundant packet? skip */
