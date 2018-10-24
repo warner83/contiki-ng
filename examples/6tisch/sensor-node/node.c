@@ -372,8 +372,14 @@ root_et_handler(struct etimer *et)
     /* if this was the last run, print final stats */
     if(stats->run == MAX_RUNS) {
       print_all_stats(stats);
-      stats->run = 0;
-      /* memb_free(&stats_tbl, stats); */
+      /* Are all source nodes done with their last run? */
+      for(i = 0;i < MAX_SOURCE_NODES;i++) {
+        if(stats_tbl.count[i] > 0 && stats_tbl_memb_mem[i].run < MAX_RUNS) {
+          return;
+        }
+      }
+      LOG_PRINT("All done\n");
+      memb_init(&stats_tbl);
     }
   }
 }
