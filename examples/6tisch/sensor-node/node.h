@@ -3,9 +3,9 @@
 
 #include "random.h"
 
-#define MAX_PKTS 500
+#define MAX_PKTS 1000
 #define DEFAULT_PAYLOAD_LEN 50
-#define MAX_RUNS 3
+#define MAX_RUNS 1
 #define MAX_SOURCE_NODES 16
 #define NSEQNOS 4
 
@@ -13,8 +13,8 @@
  * in terms of etimer clock ticks
  * to set a fixed interval, simply set min and max to the same value
  */
-#define SEND_INTERVAL_MIN (CLOCK_SECOND * 62 / 1000)
-#define SEND_INTERVAL_MAX (CLOCK_SECOND * 63 / 1000)
+#define SEND_INTERVAL_MIN (CLOCK_SECOND * 180 / 1000)
+#define SEND_INTERVAL_MAX (CLOCK_SECOND * 180 / 1000)
 #define SEND_INTERVAL_DELTA (SEND_INTERVAL_MAX - SEND_INTERVAL_MIN)
 #define SEND_INTERVAL_AVG ((SEND_INTERVAL_MAX + SEND_INTERVAL_MIN) / 2)
 #define SEND_INTERVAL (SEND_INTERVAL_MIN + random_rand() % (SEND_INTERVAL_DELTA + 1))
