@@ -134,7 +134,7 @@ udp_rx_callback(struct simple_udp_connection *c,
   char spaces[3 * MAX_SOURCE_NODES];
   memset(spaces, ' ', sizeof(spaces));
   i = stats - &stats_tbl_memb_mem[0];
-  spaces[i*5] = '\0';
+  spaces[i * 3] = '\0';
 
   LOG_INFO("%s <-- %s %3d\n",
          (char*)data,
