@@ -43,18 +43,43 @@
 #include "net/ipv6/uip-sr.h"
 #include "net/mac/tsch/tsch.h"
 #include "net/routing/routing.h"
+#include "net/ipv6/simple-udp.h"
+#include "sys/log.h"
 
 #define DEBUG DEBUG_PRINT
 #include "net/ipv6/uip-debug.h"
 
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_INFO
+#define UDP_CLIENT_PORT	8765
+#define UDP_SERVER_PORT	5678
+
+static struct simple_udp_connection udp_conn;
+static uip_ipaddr_t root_ipaddr;
 /*---------------------------------------------------------------------------*/
 PROCESS(node_process, "RPL Node");
+PROCESS(udp_client_process, "UDP client");
 AUTOSTART_PROCESSES(&node_process);
 
+/*---------------------------------------------------------------------------*/
+static void
+udp_rx_callback(struct simple_udp_connection *c,
+         const uip_ipaddr_t *sender_addr,
+         uint16_t sender_port,
+         const uip_ipaddr_t *receiver_addr,
+         uint16_t receiver_port,
+         const uint8_t *data,
+         uint16_t datalen)
+{
+  LOG_INFO("%s from %3d\n",
+           (char *)data,
+           sender_addr->u8[15]);
+}
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(node_process, ev, data)
 {
   int is_coordinator;
+  static struct etimer et;
 
   PROCESS_BEGIN();
 
@@ -68,6 +93,23 @@ PROCESS_THREAD(node_process, ev, data)
     NETSTACK_ROUTING.root_start();
   }
   NETSTACK_MAC.on();
+
+  /* Start client process after reaching coordinator  */
+  if(is_coordinator) {
+    simple_udp_register(&udp_conn, UDP_SERVER_PORT, NULL,
+                        UDP_CLIENT_PORT, udp_rx_callback);
+  } else {
+    while (!NETSTACK_ROUTING.node_is_reachable()) {
+      etimer_set(&et, CLOCK_SECOND);
+      PROCESS_YIELD_UNTIL(etimer_expired(&et));
+    }
+    NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr);
+    LOG_INFO_6ADDR(&root_ipaddr);
+    LOG_INFO_("\n");
+    simple_udp_register(&udp_conn, UDP_CLIENT_PORT, NULL,
+                        UDP_SERVER_PORT, NULL);
+    process_start(&udp_client_process, NULL);
+  }
 
 #if WITH_PERIODIC_ROUTES_PRINT
   {
@@ -91,3 +133,22 @@ PROCESS_THREAD(node_process, ev, data)
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
+PROCESS_THREAD(udp_client_process, ev, data)
+{
+  static struct etimer periodic_timer;
+
+  PROCESS_BEGIN();
+
+  /* leaf: send 10 packets to root */
+  static int i;
+  for(i = 0;i < 10;i++) {
+    char message[] = "Hello";
+    simple_udp_sendto(&udp_conn, message, sizeof(message), &root_ipaddr);
+    etimer_set(&periodic_timer, CLOCK_SECOND * 2);
+    PROCESS_YIELD_UNTIL(etimer_expired(&periodic_timer));
+  }
+
+  PRINTF("Finished sending\n");
+
+  PROCESS_END();
+}

@@ -65,6 +65,10 @@
 
 #endif /* WITH_SECURITY */
 
+/* Orchestra customizations */
+// Zhitao: BUG(?) setting ORCHESTRA_CONF_UNICAST_PERIOD to 1 or 2 leads to no data being sent, despite correct TSCH synch, why??; a value >= 3 works as it should.
+#define ORCHESTRA_CONF_UNICAST_PERIOD 3
+
 /*******************************************************/
 /************* Other system configuration **************/
 /*******************************************************/
