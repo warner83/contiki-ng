@@ -67,7 +67,9 @@
 
 /* Orchestra customizations */
 // Zhitao: BUG(?) setting ORCHESTRA_CONF_UNICAST_PERIOD to 1 or 2 leads to no data being sent, despite correct TSCH synch, why??; a value >= 3 works as it should.
-#define ORCHESTRA_CONF_UNICAST_PERIOD 3
+#define ORCHESTRA_CONF_UNICAST_PERIOD 2
+#define QUEUEBUF_CONF_NUM 8
+#define TSCH_CONF_DEFAULT_HOPPING_SEQUENCE TSCH_HOPPING_SEQUENCE_2_2
 
 /*******************************************************/
 /************* Other system configuration **************/
@@ -78,8 +80,8 @@
 #define LOG_CONF_LEVEL_TCPIP                       LOG_LEVEL_WARN
 #define LOG_CONF_LEVEL_IPV6                        LOG_LEVEL_WARN
 #define LOG_CONF_LEVEL_6LOWPAN                     LOG_LEVEL_WARN
-#define LOG_CONF_LEVEL_MAC                         LOG_LEVEL_INFO
-#define LOG_CONF_LEVEL_FRAMER                      LOG_LEVEL_DBG
+#define LOG_CONF_LEVEL_MAC                         LOG_LEVEL_DBG
+#define LOG_CONF_LEVEL_FRAMER                      LOG_LEVEL_INFO
 #define TSCH_LOG_CONF_PER_SLOT                     1
 
 #endif /* PROJECT_CONF_H_ */
