@@ -67,9 +67,10 @@
 
 /* Orchestra customizations */
 // Zhitao: BUG(?) setting ORCHESTRA_CONF_UNICAST_PERIOD to 1 or 2 leads to no data being sent, despite correct TSCH synch, why??; a value >= 3 works as it should.
-#define ORCHESTRA_CONF_UNICAST_PERIOD 2
+#define ORCHESTRA_CONF_UNICAST_PERIOD 1
 #define QUEUEBUF_CONF_NUM 8
-#define TSCH_CONF_DEFAULT_HOPPING_SEQUENCE TSCH_HOPPING_SEQUENCE_2_2
+#define TSCH_CONF_DEFAULT_HOPPING_SEQUENCE TSCH_HOPPING_SEQUENCE_4_4
+#define ORCHESTRA_CONF_RULES { &eb_per_time_source, &default_common, &unicast_per_neighbor_rpl_ns}
 
 /*******************************************************/
 /************* Other system configuration **************/
