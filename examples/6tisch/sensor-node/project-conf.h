@@ -64,12 +64,16 @@
 #endif /* WITH_SECURITY */
 
 /* Orchestra customizations */
-#define ORCHESTRA_CONF_RULES { &eb_per_time_source, &unicast_per_neighbor_rpl_storing, &default_common }
-#define ORCHESTRA_CONF_UNICAST_SENDER_BASED 1
+#define ORCHESTRA_CONF_RULES { &eb_per_time_source, &unicast_per_neighbor_rpl_ns_sb, &default_common }
+#define ORCHESTRA_CONF_UNICAST_SENDER_BASED 0
 #define ORCHESTRA_CONF_COLLISION_FREE_HASH 1
 #define ORCHESTRA_CONF_EBSF_PERIOD 397
 #define ORCHESTRA_CONF_COMMON_SHARED_PERIOD 31
-#define ORCHESTRA_CONF_UNICAST_PERIOD 17
+#define ORCHESTRA_CONF_UNICAST_PERIOD 5
+
+/* TSCH customizations */
+#define TSCH_CONF_DEFAULT_TIMESLOT_LENGTH 8000 // 8 ms
+
 
 /*******************************************************/
 /************* Other system configuration **************/

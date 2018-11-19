@@ -17,7 +17,7 @@ MAKE_MAC = MAKE_MAC_TSCH
 MODULES += os/services/shell
 
 # default routing is RPL LITE
-MAKE_ROUTING = MAKE_ROUTING_RPL_CLASSIC
+# MAKE_ROUTING = MAKE_ROUTING_RPL_CLASSIC
 
 ifeq ($(MAKE_WITH_ORCHESTRA),1)
 MODULES += os/services/orchestra
