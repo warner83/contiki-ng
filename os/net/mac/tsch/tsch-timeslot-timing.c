@@ -76,4 +76,19 @@ const uint16_t tsch_timeslot_timing_us_10000[tsch_ts_elements_count] = {
   10000, /* TimeslotLength */
 };
 
+const uint16_t tsch_timeslot_timing_us_8000[tsch_ts_elements_count] = {
+   1800*4/5, /* CCAOffset */
+    128*4/5, /* CCA */
+   2120*4/5, /* TxOffset */
+  (2120 - (TSCH_CONF_RX_WAIT / 2))*4/5, /* RxOffset */
+    800*4/5, /* RxAckDelay */
+   1000*4/5, /* TxAckDelay */
+  TSCH_CONF_RX_WAIT*4/5, /* RxWait */
+    400*4/5, /* AckWait */
+    192*4/5, /* RxTx */
+   2400*4/5, /* MaxAck */
+   4256*4/5, /* MaxTx */
+  10000*4/5, /* TimeslotLength */
+};
+
 /** @} */

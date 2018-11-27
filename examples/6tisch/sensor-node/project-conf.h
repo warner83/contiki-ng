@@ -72,7 +72,7 @@
 #define ORCHESTRA_CONF_UNICAST_PERIOD 32
 
 /* TSCH customizations */
-/* #define TSCH_CONF_DEFAULT_TIMESLOT_LENGTH 8000 // 8 ms *\/ */
+#define TSCH_CONF_DEFAULT_TIMESLOT_TIMING tsch_timeslot_timing_us_8000 // 8 ms */
 #define TSCH_CONF_BURST_MAX_LEN 0 // set to 0 to disable burst mode
 #define QUEUEBUF_CONF_NUM 8 // general size of various queue buffers, cooja default 64
 /* #define TSCH_CONF_DEQUEUED_ARRAY_SIZE 8 // must >= QUEUEBUF_CONF_NUM */
