@@ -83,11 +83,8 @@ C_SOURCE_FILES += $(NRF52_SDK_ROOT)/components/boards/boards.c \
   $(NRF52_SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(NRF52_SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
   $(NRF52_SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rng.c \
-  $(NRF52_SDK_ROOT)/modules/nrfx/drivers/src/nrfx_wdt.c \
   $(NRF52_SDK_ROOT)/modules/nrfx/mdk/system_nrf52.c \
   $(NRF52_SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
-  $(NRF52_SDK_ROOT)/integration/nrfx/legacy/nrf_drv_rng.c \
-  # $(NRF52_SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
 
 ifneq ($(NRF52_WITHOUT_SOFTDEVICE),1)
 C_SOURCE_FILES += $(NRF52_SDK_ROOT)/components/softdevice/common/nrf_sdh.c \
